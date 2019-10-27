@@ -254,3 +254,4 @@ zone "proxy.a7.com"{
 
 ![image](https://user-images.githubusercontent.com/37492916/67634888-bd689580-f8f3-11e9-900c-f430525307b4.png)
  
+-Restart bind9 dengan perintah `service bind9 restart`
