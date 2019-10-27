@@ -248,7 +248,7 @@ zone "proxy.a7.com"{
  
 -Buat folder jarkom di dalam /etc/bind `mkdir /etc/bind/jarkom`
  
--Copykan file db.local pada path /etc/bind ke dalam folder jarkomtc.com yang baru saja dibuat dan diubah namanya menjadi jarkom `cp /etc/bind/db.local /etc/bind/jarkom/proxy.a7.com`
+-Copykan file db.local pada path /etc/bind ke dalam folder proxy.a7.com yang baru saja dibuat dan diubah namanya menjadi jarkom `cp /etc/bind/db.local /etc/bind/jarkom/proxy.a7.com`
 
 -Buka `nano /etc/bind/jarkom/proxy.a7.com` dan ubah seperti gambar di bawah ini:
 
