@@ -108,3 +108,149 @@ Nomor 4
 ![image](https://user-images.githubusercontent.com/37492916/67634406-1d5c3d80-f8ee-11e9-9895-092a437b25f5.png)
 
 ![image](https://user-images.githubusercontent.com/37492916/67634486-36192300-f8ef-11e9-9855-a4d04805986a.png)
+
+Nomor 5
+
+![image](https://user-images.githubusercontent.com/37492916/67634448-99ef1c00-f8ee-11e9-93f7-a4d8e2fe7603.png)
+
+
+6. Prof. Oak meminta anda membuatkan user otentikasi dengan format:
+
+● User : yy_moltres_user
+
+● Password : yy_password
+
+Note: yy adalah nama kelompok masing-masing. Contoh : a1_moltres_user
+
+
+Jawab:
+
+- Install squid3 pada UML MOLTRES `apt-get install squid3`
+
+- Install apache2-utils pada UML MOLTRES `apt-get install apache2-utils`
+
+- Backup terlebih dahulu file konfigurasi default yang disediakan squid. Ketikkan perintah berikut untuk melakukan backup:
+
+`mv /etc/squid3/squid.conf /etc/squid3/squid.conf.bak`
+
+- Buat user dan password baru. Ketikkan:
+
+`htpasswd -c /etc/squid3/passwd a7_moltres_user` dan `password: a7_password`
+
+-Buat konfigurasi baru dengan mengetikkan:
+
+`nano /etc/squid3/squid.conf`
+
+Tambahkan konfigurasi seperti di bawah ini
+
+```
+http_port 7777
+visible_hostname mewtwo
+
+auth_param basic program /usr/lib/squid3/ncsa_auth /etc/squid3/passwd
+auth_param basic children 5
+auth_param basic realm Proxy
+auth_param basic credentialsttl 2 hours
+auth_param basic casesensitive on
+acl USERS proxy_auth REQUIRED
+http_access allow USERS
+```
+
+- Restart squid dengan cara mengetikkan perintah:
+
+`service squid3 restart`
+
+
+7. Untuk Client pada subnet 2 HANYA BISA mengakses internet pada hari Senin
+s.d. Jumat pukul 11.00 s.d. 13.00 WIB
+
+8. Untuk Client pada subnet 3 HANYA BISA mengakses internet pada hari Senin
+s.d. Jumat pukul 20.00 s.d. 07.00 WIB pada keesokan harinya.
+
+Jawab:
+
+Buka `nano /etc/squid3/squid.conf` lalu ubah seperti berikut:
+
+```
+http_port 8888
+visible_hostname moltres
+
+auth_param basic program /usr/lib/squid3/ncsa_auth /etc/squid3/passwd
+auth_param basic children 5
+auth_param basic realm Proxy
+auth_param basic credentialsttl 2 hours
+auth_param basic casesensitive on
+acl USERS proxy_auth REQUIRED
+
+acl AKSES_T src 192.168.0.0/24
+acl AKSES_P src 192.168.1.0/24
+acl AKSES time MTWHF 11:00-13:00
+acl AKSES_1 time MTWHF 20:00-24:00
+acl AKSES_2 time TWHFA 00:00-07:00
+
+http_access allow USERS AKSES_T AKSES
+http_access allow USERS AKSES_P AKSES_1
+http_access allow USERS AKSES_P AKSES_2
+
+```
+
+9. Setiap ada koneksi dari subnet AJK (10.151.36.0/24) yang mengakses google.com akan langsung dialihkan
+menuju duckduckgo.com.
+
+Jawab:
+
+Buka `nano /etc/squid3/squid.conf` lalu tambahkan seperti berikut:
+
+```
+http_port 8888
+visible_hostname moltres
+
+auth_param basic program /usr/lib/squid3/ncsa_auth /etc/squid3/passwd
+auth_param basic children 5
+auth_param basic realm Proxy
+auth_param basic credentialsttl 2 hours
+auth_param basic casesensitive on
+acl USERS proxy_auth REQUIRED
+
+acl AKSES_T src 192.168.0.0/24
+acl AKSES_P src 192.168.1.0/24
+acl AKSES time MTWHF 11:00-13:00
+acl AKSES_1 time MTWHF 20:00-24:00
+acl AKSES_2 time TWHFA 00:00-07:00
+
+acl roket dstdomain .google.com
+acl sub_ajk src 10.151.36.0/24
+deny_info http://duckduckgo.com sub_ajk
+http_access deny roket sub_ajk
+
+http_access allow USERS AKSES_T AKSES
+http_access allow USERS AKSES_P AKSES_1
+http_access allow USERS AKSES_P AKSES_2
+http_access allow USERS
+```
+
+11. Karena menurut Prof. Oak menghafalkan IP Proxy kota Pallet cukup merepotkan, kalian diminta untuk mempermudah trainer dan penduduk dalam menggunakan Proxy yaitu cukup dengan mengetikkan proxy.yy.com dan memasukkan port 8888.
+
+Jawab:
+
+-Install aplikasi bind9 pada ARTICUNO dengan perintah: `apt-get install bind9 -y`
+
+-Lakukan perintah pada ARTICUNO. Isikan seperti berikut: `nano /etc/bind/named.conf.local`
+
+-Isikan konfigurasi domain proxy.a7.com sesuai dengan syntax berikut:
+
+```
+zone "proxy.a7.com"{
+	type master;
+	file "/etc/bind/jarkom/proxy.a7.com";
+	};
+ ```
+ 
+-Buat folder jarkom di dalam /etc/bind `mkdir /etc/bind/jarkom`
+ 
+-Copykan file db.local pada path /etc/bind ke dalam folder jarkomtc.com yang baru saja dibuat dan diubah namanya menjadi jarkom `cp /etc/bind/db.local /etc/bind/jarkom/proxy.a7.com`
+
+-Buka `nano /etc/bind/jarkom/proxy.a7.com` dan ubah seperti gambar di bawah ini:
+
+![image](https://user-images.githubusercontent.com/37492916/67634888-bd689580-f8f3-11e9-900c-f430525307b4.png)
+ 
